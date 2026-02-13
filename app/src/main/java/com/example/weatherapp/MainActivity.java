@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     private String[] cities = {"Moscow", "Saint Petersburg", "Nizhniy Novgorod", "Sochi", "Chaykovskiy", "Nizhniy Tagil"};
     private String[] periods = {"Today", "Tomorrow", "3 Days", "10 Days", "Month"};
 
-    private Map<String, Integer> codes = Map.of("Moscow", 4368, "Saint Petersburg", 4079, "Nizhniy Novgorod", 4355, "Sochi", 5233, "Chaykovskiy", 11777, "Nizhniy Tagil", 4478);
 
     private String selectedCity;
     private String selectedPeriod;
@@ -79,7 +78,8 @@ public class MainActivity extends AppCompatActivity {
         toPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String extendURL = stringBuilder(baseURL, selectedCity, selectedPeriod);
+                UrlBuilder url = new UrlBuilder(baseURL, selectedCity, selectedPeriod);
+                String extendURL = url.getURL();
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(extendURL));
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
                 if (intent.resolveActivity(getPackageManager()) != null){
@@ -96,47 +96,5 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-    }
-
-    private String stringBuilder(String baseURL, String city, String period){
-        Integer code = codes.get(city);
-        switch (city){
-            case "Saint Petersburg":
-                city = "sankt-peterburg";
-                break;
-            case "Nizhniy Novgorod":
-                city = "nizhny-novgorod";
-                break;
-            case "Sochi":
-                city = "sochi";
-                break;
-            case "Chaykovskiy":
-                city = "chaykovsky";
-                break;
-            case "Nizhniy Tagil":
-                city = "nizhny-tagil";
-                break;
-                case "Moscow":
-                    city = "moscow";
-                    break;
-        }
-        switch (period){
-            case "Today":
-                period = "/";
-                break;
-            case "Tomorrow":
-                period = "/tomorrow/";
-                break;
-            case "3 Days":
-                period = "/3-days/";
-                break;
-            case "10 Days":
-                period = "/10-days/";
-                break;
-            case "Month":
-                period = "/month/";
-                break;
-        }
-        return baseURL + city + "-" + code + period;
     }
 }
